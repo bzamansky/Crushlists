@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
+  </head>
+
+  <body bgcolor="#3db0bb">
+    <center>
+    <h1>Stuy Crushlists 2013 -- Add/Edit A Crushlist</h1>
+    
+    
+    <form class="pure-form" method="POST">
+    <fieldset>
+        <legend>Add/Edit Your Crushlist</legend>
+	
+        <input name="name" type="text" placeholder="Your Name">
+	
+        <button id="submit" type="submit" class="pure-button notice">Submit</button>
+	
+    </fieldset>
+    </form>
+
+    {% if name %}
+    <form class="pure-form" method="POST">
+      <fieldset>
+	<legend>Add a Crushlist or Edit your Crushlist</legend>
+	<input name="name2" type="text" placeholder="Type your name again">
+	<textarea name="crushes" class="pure-input-2-3" type="text" placeholder="Your Crushes">{{current}}</textarea>
+	
+	<button id="submit" type="submit" class="pure-button notice">Edit Crushlist</button>
+      </fieldset>
+    </form>
+
+
+    <div>
+      Please separate your crushes with commas.
+      <p/>
+    </div>
+    {% endif %}
+
+    <div>
+      {% if crush %}
+      The crushlist for {{person}} is 
+      {% for item in crushlist %}
+      <p/>
+      {{item}}
+      {% endfor %}
+      {% endif %}
+    </div>
+
+
+    <div id="button">
+      <button class="pure-button" id="home" onclick="window.location.href='/'">Home</button>
+    </div>
+
+    </center>
+  </body>
+
+
+</html>
