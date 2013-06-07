@@ -1,13 +1,12 @@
-import  mongo
-from flask import Flask, render_template, redirect, request
+import mongo
+from flask import Flask, render_template, redirect, request, session
 
 app = Flask(__name__)
 app.secret_key="blah"
 
-
 @app.route("/",methods = ['GET','POST'])
 def home():
-    return render_template("home.html")
+    return render_template("home.html",clicked=False)
 
 
 """
@@ -22,32 +21,33 @@ def add():
         return render_template("add.html",crush=True,crushlist=crushlist)
     return render_template("add.html",crush=False,crushlist="")
 """
+
 @app.route("/add",methods=['GET','POST'])
 def add():
     if request.method == "POST":
-        
         name = ""
         current = ""
         if 'name' in request.form:
             name = request.form.get("name")
+            session['user'] = name
             crushlist = mongo.getPeopleYouLike(str(name))
             for item in crushlist:
                 current += item + ", "
             enter = False
-            return render_template("add.html",name=True,crush=True,crushlist=crushlist,person=name,current=current)
+            return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=name,current=current)
 
         else:
             meep = request.form.get("crushes")
-            name2 = request.form.get("name2")
             crushl = meep.split(", ")
-            mongo.addPerson(str(name2),crushl)
+            name = session['user']
+            mongo.addPerson(str(name),crushl)
             for item in crushl:
                 if item[0] == " ":
                     item = item[1:]
                 current += item + ", "
-            return render_template("add.html",name=True,crush=True,crushlist=crushl,person=name2,current=current)
+            return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=current)
 
-    return render_template("add.html",name=False,crush=False,crushlist="")
+    return render_template("add.html",name=True,crush=False,crushlist="")
 
 @app.route("/see",methods=['GET','POST'])
 def see():

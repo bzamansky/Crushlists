@@ -11,6 +11,7 @@ def clearDB():
     db = conn()
     db.students.remove()
 
+
 def addPerson(name,crushlist):
     db = conn()
     d = {'name':name, 'crushlist':crushlist}
@@ -20,6 +21,14 @@ def addPerson(name,crushlist):
         db.students.update({'name':name},d)
     else:
         db.students.insert(d)
+
+
+def addPerson2(name,crush,year):
+    db = conn()
+    d = {'name':name,'crush':crush,'year':year}
+    r = [x for x in db.students.find({'name':name})]
+    print r
+
 
 def getPeopleYouLike(name):
     db = conn()
