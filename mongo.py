@@ -49,3 +49,20 @@ def getPeopleWhoLikeYou(name):
     if len(yours) == 0:
         return ["No one has put you on their crushlist", "Or you might need to type your name differently or try capitalizing/uncapitalizing the name"]
     return yours
+
+
+def getAllPeople():
+    db = conn()
+    r = [x for x in db.students.find()]
+    l = [x['name'] for x in r]
+    return l
+
+def printAll():
+    db = conn()
+    r = [x for x in db.students.find()]
+    l = [[x['name'],x['crushlist']] for x in r]
+    for x in l:
+        print x[0]
+        print x[1]
+
+#printAll()

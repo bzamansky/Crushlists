@@ -49,16 +49,22 @@ def add():
 
 @app.route("/see",methods=['GET','POST'])
 def see():
+    drop = mongo.getAllPeople()
     if request.method == "POST":
         if "yours" in request.form:
             name = request.form.get("yours")
             words = mongo.getPeopleYouLike(str(name))
-            return render_template("see.html",submitted=True,submit=False,name=name,crushes=words)
+            return render_template("see.html",submitted=True,submit=False,name=name,crushes=words,drop=drop,browse=False)
         elif "likes" in request.form:
             name = request.form.get("likes")
             words = mongo.getPeopleWhoLikeYou(str(name))
-            return render_template("see.html",submitted=False,submit=True,name=name,crushes=words)
-    return render_template("see.html",submitted=False,submit=False)
+            return render_template("see.html",submitted=False,submit=True,name=name,crushes=words,drop=drop,browse=False)
+        else:
+            name = request.form.get('name')
+            words = mongo.getPeopleYouLike(str(name))
+            return render_template("see.html",submitted=False,submit=False,name=name,crushes=words,drop=drop,browse=True)
+            
+    return render_template("see.html",submitted=False,submit=False,drop=drop)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
