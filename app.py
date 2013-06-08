@@ -107,11 +107,14 @@ def see():
 @app.route("/addAjax")
 def addAjax():
     crusher = session['user']
-    year = request.args.get('cyear',"")
+    cyear = request.args.get('cyear',"")
+    lyear = request.args.get('lyear',"")
     crush = request.args.get('ccrush',"")
     hm = request.args.get('chm','')
+    print cyear
+    print lyear
     if len(crush)>0:
-        mongo.addPerson2(str(crusher),crush,year,hm)
+        mongo.addPerson2(str(crusher),crush,cyear,lyear,hm)
     crushl = mongo.getPeopleYouLike2(str(crusher))
     return render_template("crushonly.html",name=False,crush=True,crushlist=crushl,person=crusher)
 
