@@ -21,6 +21,17 @@
     </form>
 
     {% else %}
+
+   <div style="width:400px;height=fit;border:1px solid blue;">
+      {% if crush %}
+      The crushlist for {{person}} is 
+      {% for item in crushlist %}
+      <p/>
+      {{item}}
+      {% endfor %}
+      {% endif %}
+    </div>
+
     <form class="pure-form" method="POST">
       <fieldset>
 	<legend>Add a Crushlist or Edit your Crushlist</legend>
@@ -38,15 +49,6 @@
     </div>
     {% endif %}
 
-    <div>
-      {% if crush %}
-      The crushlist for {{person}} is 
-      {% for item in crushlist %}
-      <p/>
-      {{item}}
-      {% endfor %}
-      {% endif %}
-    </div>
 
     <div id="button">
       <button class="pure-button" id="home" onclick="window.location.href='/'">Home</button>

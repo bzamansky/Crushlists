@@ -1,4 +1,4 @@
-import mongo
+import mongo, re
 from flask import Flask, render_template, redirect, request, session
 
 app = Flask(__name__)
@@ -38,14 +38,12 @@ def add():
 
         else:
             meep = request.form.get("crushes")
-            crushl = meep.split(", ")
+            crushl = [x.strip() for x in meep.split(", ")]
             name = session['user']
             mongo.addPerson(str(name),crushl)
             for item in crushl:
-                if item[0] == " ":
-                    item = item[1:]
                 current += item + ", "
-            return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=current)
+            return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=meep)
 
     return render_template("add.html",name=True,crush=False,crushlist="")
 
