@@ -1,4 +1,5 @@
 import mongo, re
+import json
 from flask import Flask, render_template, redirect, request, session
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ def home():
 @app.route("/add",methods=['GET','POST'])
 def add():
     if request.method == "POST":
-        
+
         username = ""
         password = ""
         current = ""
@@ -26,7 +27,7 @@ def add():
                 return render_template("add.html",name=True,crush=False,crushlist="")
             crushl = mongo.getPeopleYouLike2(str(name))
             return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=current)
-        
+
         elif 'usernamereg' in request.form:
             namereg = request.form.get("namereg")
             usernamereg = request.form.get("usernamereg")
@@ -40,7 +41,7 @@ def add():
             session['user'] = namereg
             crushlist = mongo.getPeopleYouLike2(str(namereg))
             return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
-        
+
 
         elif 'remove' in request.form:
             name = session['user']
@@ -99,8 +100,21 @@ def see():
                     x = item[0]+", "+item[1]
                 words.append(x)
             return render_template("see.html",submitted=False,submit=False,name=name,crushes=words,drop=drop,browse=True)
-            
+
     return render_template("see.html",submitted=False,submit=False,drop=drop)
+
+####################  Z ####################
+@app.route("/addAjax")
+def addAjax():
+    crusher = session['user']
+    year = request.args.get('cyear',"")
+    crush = request.args.get('ccrush',"")
+    hm = request.args.get('chm','')
+    if len(crush)>0:
+        mongo.addPerson2(str(crusher),crush,year,hm)
+    crushl = mongo.getPeopleYouLike2(str(crusher))
+    return render_template("crushonly.html",name=False,crush=True,crushlist=crushl,person=crusher)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
