@@ -2,6 +2,8 @@
 <html>
   <head>
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="static/z.js"></script>
   </head>
 
   <body bgcolor="#3db0bb">
@@ -18,6 +20,7 @@
 	
         <button id="submit" type="submit" class="pure-button notice">Submit</button>
 	</form>
+
     <form class="pure-form" method="POST">
 	<br><br><br>
 	<b>If you have not signed up yet:<br> *If you've added a crushlist already but have not created a username and password, type in your name below just as you originally did and then choose your username and password.</b><br>
@@ -31,30 +34,56 @@
 
     {% else %}
 
-   <div style="width:400px;height=fit;border:1px solid blue;">
-      {% if crush %}
-      The crushlist for {{person}} is 
-      {% for item in crushlist %}
-      <p/>
-      {{item}}
-      {% endfor %}
-      {% endif %}
-    </div>
 
     <form class="pure-form" method="POST">
       <fieldset>
 	<legend>Add a Crushlist or Edit your Crushlist</legend>
-	{{person}}
-	<textarea name="crushes" class="pure-input-2-3" type="text" placeholder="Your Crushes">{{current}}</textarea>
-	
-	<button id="submit" type="submit" class="pure-button notice">Edit Crushlist</button>
+
+	<div id="crushesgohere">
+	  
+	  <table class="pure-table">
+	    <thead>
+	      <tr>
+		<th>Name</th>
+		<th>Year</th>
+		<th>HM</th>
+		<th></th>
+	      </tr>
+	    </thead>
+	    {% for item in crushlist %}
+	    <tr>
+	      
+	      <td>{{item[0]}}</td>
+	      <td>{{item[1]}}</td>
+	      <td>{{item[2]}}</td>
+	      <td><button name="{{item[0]}}" class="pure-button" style="font-size:60%;">Remove</button></td>
+	      </tr>
+	    {% endfor %}
+	  </table>
+	</div>
+      </fieldset>
+    </form>
+
+    <form class="pure-form" method="POST">
+      <fieldset>
+	<input type="text" placeholder="crush" id="ccrush"></input>
+	<input type="text" placeholder="year" id="cyear"></input>
+	<input type="text" placeholder="Honorable Mention" id="chm"></input>
+	<a href="#" id="addcrush" class="pure-button notice">Add Crushes</a>
       </fieldset>
     </form>
 
 
     <div>
-      Please separate your crushes with commas.
+      Please format your crushlist as such:
       <p/>
+      FirstName LastName, Year_of_Graduation, Honorable Mention (HM)
+      <p/>
+      For example:
+      <p/>
+      Kevin Li, 2013
+      <p/>
+      Kevin Li, 2012, HM
     </div>
 
     <form class="pure-form" method="POST">
