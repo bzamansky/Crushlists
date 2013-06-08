@@ -1,4 +1,5 @@
 from pymongo import Connection
+import re
 
 def conn():
     connection = Connection('mongo2.stuycs.org')
@@ -15,7 +16,8 @@ def clearDB():
 def addPerson(name,crushlist):
     db = conn()
     d = {'name':name, 'crushlist':crushlist}
-    r = [x for x in db.students.find({'name':name})]
+    regx = re.compile("^"+name,re.IGNORECASE)
+    r = [x for x in db.students.find({'name':regx})]
     print r
     if len(r) > 0:
         db.students.update({'name':name},d)
@@ -32,7 +34,8 @@ def addPerson2(name,crush,year):
 
 def getPeopleYouLike(name):
     db = conn()
-    r = [x for x in db.students.find({'name':name})]
+    regx = re.compile("^"+name,re.IGNORECASE)
+    r = [x for x in db.students.find({'name':regx})]
     if len(r) == 0:
         return ["You have not submitted a crushlist","Or you might need to add a last name or try capitalizing/uncapitalizing the name"]
     else:
@@ -44,8 +47,9 @@ def getPeopleWhoLikeYou(name):
     r = [x for x in db.students.find()]
     yours = []
     for person in r:
-        if name in person['crushlist']:
-            yours.append(person['name'])
+        for x in person['crushlist']:
+            if x.lower() == name.lower():
+                yours.append(person['name'])
     if len(yours) == 0:
         return ["No one has put you on their crushlist", "Or you might need to type your name differently or try capitalizing/uncapitalizing the name"]
     return yours
