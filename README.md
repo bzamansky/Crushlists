@@ -6,6 +6,11 @@ Students will enter people they have crushes on, and then can view who they or o
 
 
 THINGS I WOULD LIKE TO FIX/ADD/CHANGE
-*add a list of most frequently listed crushes (people who lots of people like)
-*have a separate category for honorable mentions, adding similar to the crushes
-*upload pictures of crushlists?
+<ul>
+<li>add a list of most frequently listed crushes (people who lots of people like)</li>
+<li>have a separate category for honorable mentions, adding similar to the crushes</li>
+<li>upload pictures of crushlists?</li>
+<li>edit the search function to make it more accessible</li>
+<li>fixing the db to store with years -- Batya is working on this</li>
+<li>chains of crushes, etc</li>
+</ul>

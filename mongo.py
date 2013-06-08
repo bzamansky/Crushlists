@@ -35,14 +35,6 @@ def addPerson(name,crushlist,*args):
     else:
         db.students.insert(d)
 
-
-def addPerson2(name,crush,year):
-    db = conn()
-    d = {'name':name,'crush':crush,'year':year}
-    r = [x for x in db.students.find({'name':name})]
-    print r
-
-
 def getPeopleYouLike(name):
     db = conn()
     regx = re.compile("^"+name,re.IGNORECASE)
@@ -98,5 +90,47 @@ def removeUser(name):
     db = conn()
     db.students.remove({'name':name})
 
+
+#### Re-hashing the db
+
+def addUser(name,username,password):
+    db = conn()
+    regx = re.compile("^"+name,re.IGNORECASE)
+    d = {'name':regx,'username':username,'password':password}
+    r = [x for x in db.users.find({'name':name})]
+    if len(r) == 0:
+        db.users.insert(d)
+    else:
+        return "User Already Exists"
+
+def addPerson2(name,crush,year):
+    db = conn()
+    d = {'name':name,'crush':crush,'year':year}
+    r = [x for x in db.people.find({'name':name})]
+    print r
+
+def getPeopleYouLike2(name):
+    db = conn()
+    regx = re.compile("^"+name,re.IGNORECASE)
+    r = [x for x in db.people.find({'name':regx})]
+    l = [[x['crush'],x['year']] for x in r]
+    return l
+
+def getPeopleWhoLikeYou2(name):
+    db=conn()
+    regx = re.compile("^"+name,re.IGNORECASE)
+    r = [x for x in db.people.find({'crush':regx})]
+    l = [x['name'] for x in r]
+    return l
+
+
+
+
+
+
+
+
 #printAll()
+
+
 
