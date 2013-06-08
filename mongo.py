@@ -150,7 +150,7 @@ def removeCrush(name,crush):
     db = conn()
     db.people.remove({'name':name,'crush':crush})
 
-getAllPeople2()
+#getAllPeople2()
 
 
 #printAll()

@@ -65,7 +65,9 @@ def add():
             return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=meep)
         else:
             name = session['user']
-            crush = request.form[0]
+            print request.form
+            crush = request.form.keys()[0]
+            print crush
             mongo.removeCrush(name,crush)
             crushl = mongo.getPeopleYouLike2(str(name))
             return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name)
