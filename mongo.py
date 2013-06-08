@@ -90,6 +90,7 @@ def removeUser(name):
     db = conn()
     db.students.remove({'name':name})
     db.users.remove({'name':name})
+    db.people.remove({'name':name})
 
 
 #### Re-hashing the db
