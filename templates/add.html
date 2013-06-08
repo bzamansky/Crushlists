@@ -13,10 +13,19 @@
       <fieldset>
         <legend>Add/Edit Your Crushlist</legend>
 	
-        <input name="name" type="text" placeholder="Your Name">
+        <input name="username" type="text" placeholder="Username"><br><br>
+	<input name="password" type="password" placeholder="Password"><br><br>
 	
         <button id="submit" type="submit" class="pure-button notice">Submit</button>
-	
+	</form>
+    <form class="pure-form" method="POST">
+	<br><br><br>
+	<b>If you have not signed up yet:<br> *If you've added a crushlist already but have not created a username and password, type in your name below just as you originally did and then choose your username and password.</b><br>
+	<input name="namereg" type="text" placeholder="Your Name"><br><br>
+	<input name="usernamereg" type="text" placeholder="Username"><br><br>
+	<input name="passwordreg1" type="password" placeholder="Password"><br><br>
+	<input name="passwordreg2" type="password" placeholder="Re-type Password"><br><br>
+	 <button id="submit" type="submit" class="pure-button notice">Submit</button>
       </fieldset>
     </form>
 
@@ -49,14 +58,11 @@
     </div>
     {% endif %}
 
-
     <div id="button">
       <button class="pure-button" id="home" onclick="window.location.href='/'">Home</button>
     </div>
-
     </center>
   </body>
-
 
 </html>
 

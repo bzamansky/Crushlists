@@ -12,13 +12,24 @@ def clearDB():
     db = conn()
     db.students.remove()
 
-
-def addPerson(name,crushlist):
+def addUserInfo(name,username,password):
     db = conn()
-    d = {'name':name, 'crushlist':crushlist}
     regx = re.compile("^"+name,re.IGNORECASE)
     r = [x for x in db.students.find({'name':regx})]
-    print r
+    if r[0].has_key('username'):
+        return False
+    else:
+        db.students.update({"name": name}, {"$set": {"username": username,"password":password}})
+        return True
+
+def addPerson(name,crushlist,*args):
+    db = conn()
+    if len(args) > 0:
+        d = {'name':name, 'crushlist':crushlist, 'username':args[0], 'password':args[1]}
+    else:
+        d = {'name':name, 'crushlist':crushlist}
+    regx = re.compile("^"+name,re.IGNORECASE)
+    r = [x for x in db.students.find({'name':regx})]
     if len(r) > 0:
         db.students.update({'name':name},d)
     else:
@@ -54,6 +65,15 @@ def getPeopleWhoLikeYou(name):
         return ["No one has put you on their crushlist", "Or you might need to type your name differently or try capitalizing/uncapitalizing the name"]
     return yours
 
+def getName(username,password):
+    db = conn()
+    r = [x for x in db.students.find()]
+    for person in r:
+        if person.has_key('username'):
+            if person['username'] == username:
+                if person['password'] == password:
+                    return person['name']
+    return 0
 
 def getAllPeople():
     db = conn()
@@ -69,4 +89,14 @@ def printAll():
         print x[0]
         print x[1]
 
+def printUserInfo(username):
+    db = conn()
+    r =  db.students.find_one({'name':username})
+    print r
+
+def removeUser(name):
+    db = conn()
+    db.students.remove({'name':name})
+
 #printAll()
+
