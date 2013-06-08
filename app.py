@@ -8,23 +8,12 @@ app.secret_key="blah"
 def home():
     return render_template("home.html",clicked=False)
 
-
-"""
 @app.route("/add",methods=['GET','POST'])
 def add():
     if request.method == "POST":
-        name = request.form.get("name")
-        meep = request.form.get("crushes")
-        crushl = meep.split(",")
-        mongo.addPerson(str(name),crushl)
-        crushlist = name + " had crushes on " + meep
-        return render_template("add.html",crush=True,crushlist=crushlist)
-    return render_template("add.html",crush=False,crushlist="")
-"""
-
-@app.route("/add",methods=['GET','POST'])
-def add():
-    if request.method == "POST":
+        
+        print request.form
+        
         username = ""
         password = ""
         current = ""
@@ -32,8 +21,8 @@ def add():
         if 'username' in request.form:
             username = request.form.get("username")
             password = request.form.get("password")
-            session['user'] = name
             name = mongo.getName(username,password)
+            session['user'] = name
             crushlist = ""
             if name == 0:
                 return render_template("add.html",name=True,crush=False,crushlist="")
@@ -67,6 +56,13 @@ def add():
                 session['user'] = namereg
                 mongo.addPerson(namereg,"",usernamereg,passwordreg1)
                 return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
+
+        elif 'remove' in request.form:
+            print "REMOVING USER"
+            name = session['user']
+            print name
+            mongo.removeUser(name)
+            return render_template("add.html",name=True,crush=False,crushlist="")
         else:
             meep = request.form.get("crushes")
             crushl = [x.strip() for x in meep.split(", ")]
