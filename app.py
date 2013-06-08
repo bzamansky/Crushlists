@@ -49,7 +49,9 @@ def add():
 
 @app.route("/see",methods=['GET','POST'])
 def see():
-    drop = mongo.getAllPeople()
+    l = mongo.getAllPeople()
+    l.sort()
+    drop = l
     if request.method == "POST":
         if "yours" in request.form:
             name = request.form.get("yours")
