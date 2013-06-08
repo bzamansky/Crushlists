@@ -89,31 +89,37 @@ def printUserInfo(username):
 def removeUser(name):
     db = conn()
     db.students.remove({'name':name})
+    db.users.remove({'name':name})
 
 
 #### Re-hashing the db
+#db.users is name,username,password
+#db.people is name,crush,year
 
 def addUser(name,username,password):
     db = conn()
-    regx = re.compile("^"+name,re.IGNORECASE)
-    d = {'name':regx,'username':username,'password':password}
+    #regx = re.compile("^"+name,re.IGNORECASE)
+    d = {'name':name,'username':username,'password':password}
     r = [x for x in db.users.find({'name':name})]
     if len(r) == 0:
         db.users.insert(d)
     else:
         return "User Already Exists"
 
-def addPerson2(name,crush,year):
+def addPerson2(name,crush,year,hm):
     db = conn()
-    d = {'name':name,'crush':crush,'year':year}
-    r = [x for x in db.people.find({'name':name})]
-    print r
+    d = {'name':name,'crush':crush,'year':year,'hm':hm}
+    r = [x for x in db.people.find({'name':name,'crush':crush})]
+    if len(r) > 0:
+        db.people.update({'name':name,'crush':crush},d)
+    else:
+        db.people.insert(d)
 
 def getPeopleYouLike2(name):
     db = conn()
     regx = re.compile("^"+name,re.IGNORECASE)
     r = [x for x in db.people.find({'name':regx})]
-    l = [[x['crush'],x['year']] for x in r]
+    l = [[x['crush'],x['year'],x['hm']] for x in r]
     return l
 
 def getPeopleWhoLikeYou2(name):
@@ -123,11 +129,26 @@ def getPeopleWhoLikeYou2(name):
     l = [x['name'] for x in r]
     return l
 
+def getName2(username,password):
+    db = conn()
+    r = [x for x in db.users.find()]
+    for person in r:
+        if person.has_key('username'):
+            if person['username'] == username:
+                if person['password'] == password:
+                    return person['name']
+    return 0
+
+def getAllPeople2():
+    db = conn()
+    r = [x for x in db.users.find()]
+    #print r
+    l = [x['name'] for x in r]
+    return l
 
 
 
-
-
+getAllPeople2()
 
 
 #printAll()

@@ -18,6 +18,7 @@
 	
         <button id="submit" type="submit" class="pure-button notice">Submit</button>
 	</form>
+
     <form class="pure-form" method="POST">
 	<br><br><br>
 	<b>If you have not signed up yet:<br> *If you've added a crushlist already but have not created a username and password, type in your name below just as you originally did and then choose your username and password.</b><br>
@@ -31,7 +32,7 @@
 
     {% else %}
 
-   <div style="width:400px;height=fit;border:1px solid blue;">
+   <div style="width:400px;height:fit;border:1px solid blue;">
       {% if crush %}
       The crushlist for {{person}} is 
       {% for item in crushlist %}
@@ -45,7 +46,7 @@
       <fieldset>
 	<legend>Add a Crushlist or Edit your Crushlist</legend>
 	{{person}}
-	<textarea name="crushes" class="pure-input-2-3" type="text" placeholder="Your Crushes">{{current}}</textarea>
+	<textarea style="width:400px;height:400px;" name="crushes" class="pure-input-2-3" type="text" placeholder="Your Crushes">{{current}}</textarea>
 	
 	<button id="submit" type="submit" class="pure-button notice">Edit Crushlist</button>
       </fieldset>
@@ -53,8 +54,15 @@
 
 
     <div>
-      Please separate your crushes with commas.
+      Please format your crushlist as such:
       <p/>
+      FirstName LastName, Year_of_Graduation, Honorable Mention (HM)
+      <p/>
+      For example:
+      <p/>
+      Kevin Li, 2013
+      <p/>
+      Kevin Li, 2012, HM
     </div>
 
     <form class="pure-form" method="POST">

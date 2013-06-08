@@ -12,8 +12,6 @@ def home():
 def add():
     if request.method == "POST":
         
-        print request.form
-        
         username = ""
         password = ""
         current = ""
@@ -21,16 +19,22 @@ def add():
         if 'username' in request.form:
             username = request.form.get("username")
             password = request.form.get("password")
-            name = mongo.getName(username,password)
+            name = mongo.getName2(username,password)
             session['user'] = name
             crushlist = ""
             if name == 0:
                 return render_template("add.html",name=True,crush=False,crushlist="")
-            crushlist = mongo.getPeopleYouLike(str(name))
+            crushlist = mongo.getPeopleYouLike2(str(name))
+            crushl = []
             for item in crushlist:
-                current += item + ", "
-            enter = False
-            return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=name,current=current)
+                if item[2] != "":
+                    current += item[0] + ", "+ item[1] + ", "+ item[2] + '\n' 
+                    crushl.append(item[0]+", "+item[1] + ", " + item[2])
+                else:
+                    current += item[0]+", "+item[1]+'\n'
+                    crushl.append(item[0]+", "+item[1])
+                enter = False
+            return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=current)
         
         elif 'usernamereg' in request.form:
             namereg = request.form.get("namereg")
@@ -41,55 +45,72 @@ def add():
             current = ""
             if passwordreg1 != passwordreg2:
                 return render_template("add.html",name=True,crush=False,crushlist="")
-            if namereg in mongo.getAllPeople():
-                test = mongo.addUserInfo(namereg,usernamereg,passwordreg1)
-                if test:
-                    session['user'] = namereg
-                    crushlist = mongo.getPeopleYouLike(str(namereg))
-                    for item in crushlist:
-                        current += item + ", "
-                        enter = False
-                    return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=name,current=current)
-                else:
-                    return render_template("add.html",name=True,crush=False,crushlist="")
-            else:
-                session['user'] = namereg
-                mongo.addPerson(namereg,"",usernamereg,passwordreg1)
-                return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
+            #if namereg in mongo.getAllPeople():
+            #test = mongo.addUserInfo(namereg,usernamereg,passwordreg1)
+            #if test:
+            mongo.addUser(namereg,usernamereg,passwordreg1)
+            session['user'] = namereg
+            crushlist = mongo.getPeopleYouLike2(str(namereg))
+            for item in crushlist:
+                current += item[0] + ", "+ item[1] + ", " + item[2] + '\n'
+                enter = False
+            return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
+        #else:
+        #    return render_template("add.html",name=True,crush=False,crushlist="")
+            #else:
+            #    session['user'] = namereg
+            #    mongo.addUser(namereg,usernamereg,passwordreg1)
+            #    return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
 
         elif 'remove' in request.form:
-            print "REMOVING USER"
             name = session['user']
-            print name
             mongo.removeUser(name)
             return render_template("add.html",name=True,crush=False,crushlist="")
         else:
             meep = request.form.get("crushes")
-            crushl = [x.strip() for x in meep.split(", ")]
+            crushl = [x.strip() for x in meep.split('\n')]
             name = session['user']
-            mongo.addPerson(str(name),crushl)
             for item in crushl:
-                current += item + ", "
+                item.strip()
+                x = item.split(", ")
+                print x
+                print len(x)
+                if len(x)>2:
+                    mongo.addPerson2(str(name),x[0],x[1],x[2])
+                elif len(x) == 1:
+                    continue
+                else:
+                    mongo.addPerson2(str(name),x[0],x[1],"")
+            #mongo.addPerson2(str(name),crushl)
+            for item in crushl:
+                current += item + '\n'
             return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=meep)
     return render_template("add.html",name=True,crush=False,crushlist="")
 
 @app.route("/see",methods=['GET','POST'])
 def see():
-    l = mongo.getAllPeople()
+    l = mongo.getAllPeople2()
     l.sort()
     drop = l
     if request.method == "POST":
         if "yours" in request.form:
             name = request.form.get("yours")
-            words = mongo.getPeopleYouLike(str(name))
+            words = mongo.getPeopleYouLike2(str(name))
             return render_template("see.html",submitted=True,submit=False,name=name,crushes=words,drop=drop,browse=False)
         elif "likes" in request.form:
             name = request.form.get("likes")
-            words = mongo.getPeopleWhoLikeYou(str(name))
+            words = mongo.getPeopleWhoLikeYou2(str(name))
             return render_template("see.html",submitted=False,submit=True,name=name,crushes=words,drop=drop,browse=False)
         else:
             name = request.form.get('name')
-            words = mongo.getPeopleYouLike(str(name))
+            w = mongo.getPeopleYouLike2(str(name))
+            words = []
+            for item in w:
+                if item[2] != "":
+                    x = item[0] + ", " + item[1] + ", "+item[2]
+                else:
+                    x = item[0]+", "+item[1]
+                words.append(x)
             return render_template("see.html",submitted=False,submit=False,name=name,crushes=words,drop=drop,browse=True)
             
     return render_template("see.html",submitted=False,submit=False,drop=drop)
