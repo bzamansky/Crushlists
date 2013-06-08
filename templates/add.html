@@ -2,6 +2,8 @@
 <html>
   <head>
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.1.0/pure-min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="static/z.js"></script>
   </head>
 
   <body bgcolor="#3db0bb">
@@ -37,7 +39,7 @@
       <fieldset>
 	<legend>Add a Crushlist or Edit your Crushlist</legend>
 
-	<div>
+	<div id="crushesgohere">
 	  
 	  <table class="pure-table">
 	    <thead>
@@ -64,9 +66,10 @@
 
     <form class="pure-form" method="POST">
       <fieldset>
-	<textarea style="width:400px;height:150px;" name="crushes" class="pure-input-2-3" type="text" placeholder="Your Crushes"></textarea>
-	
-	<button name="add" type="submit" class="pure-button notice">Add Crushes</button>
+	<input type="text" placeholder="crush" id="ccrush"></input>
+	<input type="text" placeholder="year" id="cyear"></input>
+	<input type="text" placeholder="Honorable Mention" id="chm"></input>
+	<a href="#" id="addcrush" class="pure-button notice">Add Crushes</a>
       </fieldset>
     </form>
 
