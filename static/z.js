@@ -4,6 +4,9 @@ function addcrush(e) {
 	var crush=$("#ccrush").val();
 	var year=$("#cyear").val();
 	var chm=$("#chm").val();
+    if (chm=="on"){
+	chm = true;
+    }
 	$.get("/addAjax",{'ccrush':crush,'cyear':year,'chm':chm},
 	     function(data) {
 		 $("#crushesgohere").empty();
