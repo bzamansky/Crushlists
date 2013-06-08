@@ -146,7 +146,9 @@ def getAllPeople2():
     l = [x['name'] for x in r]
     return l
 
-
+def removeCrush(name,crush):
+    db = conn()
+    db.people.remove({'name':name,'crush':crush})
 
 getAllPeople2()
 
