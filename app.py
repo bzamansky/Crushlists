@@ -94,10 +94,10 @@ def see():
             w = mongo.getPeopleYouLike2(str(name))
             words = []
             for item in w:
-                if item[2] == "true":
-                    x = item[0] + ", " + item[1] + ", Honorable Mention"
+                if item[3] == "true":
+                    x = item[0] + ", " + item[1] + " " + item[2]+ ", Honorable Mention"
                 else:
-                    x = item[0]+", "+item[1]
+                    x = item[0]+", "+item[1] + " " + item[2]
                 words.append(x)
             return render_template("see.html",submitted=False,submit=False,name=name,crushes=words,drop=drop,browse=True)
 
