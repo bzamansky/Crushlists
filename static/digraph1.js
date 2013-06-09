@@ -1,7 +1,7 @@
 
 
 
-var w = 1000, h =600;
+var w = 800, h =800;
 
 var labelDistance = 0;
 
@@ -37,12 +37,13 @@ var updateNode = function() {
 }
 
 
-d3.json("/getCrushGraphData",function (data) {
+d3.json("/getCrushGraphData",function (alldata) {
 
+    var data = alldata['results'];
+    var allnames = alldata['allpeople'];
     for(var i = 0; i < data.length; i++) {
 	var node = {
-	    label : data[i]['name'],
-	    datalink : i
+	    label : data[i]['name']
 	};
     nodes.push(node);
 	labelAnchors.push({
@@ -54,7 +55,7 @@ d3.json("/getCrushGraphData",function (data) {
     }
     
 
-    for(var i = 0; i < nodes.length; i++) {
+    for(var i = 0; i < data.length; i++) {
 	var c = data[i]['crushes'];
 	
 	for(var j = 0; j<c.length; j++) {

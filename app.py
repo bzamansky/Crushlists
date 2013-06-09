@@ -103,7 +103,7 @@ def see():
 
     return render_template("see.html",submitted=False,submit=False,drop=drop)
 
-####################  Z ####################
+####################  Z zamansky ####################
 @app.route("/addAjax")
 def addAjax():
     crusher = session['user']
@@ -117,6 +117,31 @@ def addAjax():
         mongo.addPerson2(str(crusher),crush,cyear,lyear,hm)
     crushl = mongo.getPeopleYouLike2(str(crusher))
     return render_template("crushonly.html",name=False,crush=True,crushlist=crushl,person=crusher)
+
+@app.route("/graph")
+def graph():
+    return render_template("digraph1.html")
+
+@app.route("/getCrushGraphData")
+def getCrushGraphData():
+    from pymongo import Connection
+    connection = Connection('mongo2.stuycs.org')
+    db = connection.admin
+    res = db.authenticate('ml7','ml7')
+    db = connection['crushlists']
+    users = list(set([x['name'] for x in db.people.find()]))
+    results=[]
+    allcrushpeople = []
+    for u in users:
+        regx = re.compile("^"+u,re.IGNORECASE)
+        crushes = list(set([x['crush'] for x in db.people.find({'name':regx})]))
+        item = {'name':str(u),'crushes':crushes}
+        results.append(item)
+        allcrushpeople.extend(crushes)
+    allcrushpeople = list(set(allcrushpeople))
+
+    all={'allpeople':allcrushpeople,'results':results}
+    return json.dumps(all)
 
 
 if __name__ == "__main__":
