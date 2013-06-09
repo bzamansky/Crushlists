@@ -1,4 +1,5 @@
 import mongo, re
+import json
 from flask import Flask, render_template, redirect, request, session
 
 app = Flask(__name__)
@@ -11,7 +12,7 @@ def home():
 @app.route("/add",methods=['GET','POST'])
 def add():
     if request.method == "POST":
-        
+
         username = ""
         password = ""
         current = ""
@@ -24,18 +25,9 @@ def add():
             crushlist = ""
             if name == 0:
                 return render_template("add.html",name=True,crush=False,crushlist="")
-            crushlist = mongo.getPeopleYouLike2(str(name))
-            crushl = []
-            for item in crushlist:
-                if item[2] != "":
-                    current += item[0] + ", "+ item[1] + ", "+ item[2] + '\n' 
-                    crushl.append(item[0]+", "+item[1] + ", " + item[2])
-                else:
-                    current += item[0]+", "+item[1]+'\n'
-                    crushl.append(item[0]+", "+item[1])
-                enter = False
+            crushl = mongo.getPeopleYouLike2(str(name))
             return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=current)
-        
+
         elif 'usernamereg' in request.form:
             namereg = request.form.get("namereg")
             usernamereg = request.form.get("usernamereg")
@@ -45,28 +37,17 @@ def add():
             current = ""
             if passwordreg1 != passwordreg2:
                 return render_template("add.html",name=True,crush=False,crushlist="")
-            #if namereg in mongo.getAllPeople():
-            #test = mongo.addUserInfo(namereg,usernamereg,passwordreg1)
-            #if test:
             mongo.addUser(namereg,usernamereg,passwordreg1)
             session['user'] = namereg
             crushlist = mongo.getPeopleYouLike2(str(namereg))
-            for item in crushlist:
-                current += item[0] + ", "+ item[1] + ", " + item[2] + '\n'
-                enter = False
             return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
-        #else:
-        #    return render_template("add.html",name=True,crush=False,crushlist="")
-            #else:
-            #    session['user'] = namereg
-            #    mongo.addUser(namereg,usernamereg,passwordreg1)
-            #    return render_template("add.html",name=False,crush=True,crushlist=crushlist,person=namereg,current=current)
+
 
         elif 'remove' in request.form:
             name = session['user']
             mongo.removeUser(name)
             return render_template("add.html",name=True,crush=False,crushlist="")
-        else:
+        elif 'add' in request.form:
             meep = request.form.get("crushes")
             crushl = [x.strip() for x in meep.split('\n')]
             name = session['user']
@@ -81,10 +62,17 @@ def add():
                     continue
                 else:
                     mongo.addPerson2(str(name),x[0],x[1],"")
-            #mongo.addPerson2(str(name),crushl)
-            for item in crushl:
-                current += item + '\n'
+            crushl = mongo.getPeopleYouLike2(str(name))
             return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name,current=meep)
+        else:
+            name = session['user']
+            print request.form
+            crush = request.form.keys()[0]
+            print crush
+            mongo.removeCrush(name,crush)
+            crushl = mongo.getPeopleYouLike2(str(name))
+            return render_template("add.html",name=False,crush=True,crushlist=crushl,person=name)
+
     return render_template("add.html",name=True,crush=False,crushlist="")
 
 @app.route("/see",methods=['GET','POST'])
@@ -106,14 +94,30 @@ def see():
             w = mongo.getPeopleYouLike2(str(name))
             words = []
             for item in w:
-                if item[2] != "":
-                    x = item[0] + ", " + item[1] + ", "+item[2]
+                if item[3] == "true":
+                    x = item[0] + ", " + item[1] + " " + item[2]+ ", Honorable Mention"
                 else:
-                    x = item[0]+", "+item[1]
+                    x = item[0]+", "+item[1] + " " + item[2]
                 words.append(x)
             return render_template("see.html",submitted=False,submit=False,name=name,crushes=words,drop=drop,browse=True)
-            
+
     return render_template("see.html",submitted=False,submit=False,drop=drop)
+
+####################  Z ####################
+@app.route("/addAjax")
+def addAjax():
+    crusher = session['user']
+    cyear = request.args.get('cyear',"")
+    lyear = request.args.get('lyear',"")
+    crush = request.args.get('ccrush',"")
+    hm = request.args.get('chm','')
+    print cyear
+    print lyear
+    if len(crush)>0:
+        mongo.addPerson2(str(crusher),crush,cyear,lyear,hm)
+    crushl = mongo.getPeopleYouLike2(str(crusher))
+    return render_template("crushonly.html",name=False,crush=True,crushlist=crushl,person=crusher)
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

@@ -90,6 +90,7 @@ def removeUser(name):
     db = conn()
     db.students.remove({'name':name})
     db.users.remove({'name':name})
+    db.people.remove({'name':name})
 
 
 #### Re-hashing the db
@@ -106,9 +107,9 @@ def addUser(name,username,password):
     else:
         return "User Already Exists"
 
-def addPerson2(name,crush,year,hm):
+def addPerson2(name,crush,gyear,cyear,hm):
     db = conn()
-    d = {'name':name,'crush':crush,'year':year,'hm':hm}
+    d = {'name':name,'crush':crush,'year':gyear,'cyear':cyear,'hm':hm}
     r = [x for x in db.people.find({'name':name,'crush':crush})]
     if len(r) > 0:
         db.people.update({'name':name,'crush':crush},d)
@@ -119,7 +120,9 @@ def getPeopleYouLike2(name):
     db = conn()
     regx = re.compile("^"+name,re.IGNORECASE)
     r = [x for x in db.people.find({'name':regx})]
-    l = [[x['crush'],x['year'],x['hm']] for x in r]
+    for x in r:
+        x.setdefault('cyear',"")
+    l = [[x['crush'],x['year'],x['cyear'],x['hm']] for x in r]
     return l
 
 def getPeopleWhoLikeYou2(name):
@@ -146,9 +149,11 @@ def getAllPeople2():
     l = [x['name'] for x in r]
     return l
 
+def removeCrush(name,crush):
+    db = conn()
+    db.people.remove({'name':name,'crush':crush})
 
-
-getAllPeople2()
+#getAllPeople2()
 
 
 #printAll()

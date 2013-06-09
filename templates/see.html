@@ -22,11 +22,11 @@
 	</form>
 	
 	{% if submitted %}
-	{{name}} had a crush on
+	{{name}}'s Crushlist
 	<br/>
 	{% for item in crushes %}
 	<p/>
-	{{item}}
+	{{item[0]}}, {{item[1]}} {{item[2]}} {% if item[3] == 'true' %} Honorable Mention {% endif %}
 	{% endfor %}
 	{% endif %}
     </div>
@@ -47,7 +47,7 @@
       </form>
 
       {% if browse %}
-      {{name}} had a crush on
+      {{name}}'s Crushlist
       <br/>
       {% for item in crushes %}
       <p/>
